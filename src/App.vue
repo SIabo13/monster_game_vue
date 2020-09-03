@@ -12,10 +12,10 @@
 
       <div class="row">
         <div class="col">
-          <app-commands @pReset="playerHeal = $event" @mReset="monsterHealth = $event" :pHealth="playerHealth" :mHealth="monsterHealth"  @playerAttack="monsterHealth -= $event" @playerHeal="playerHealth += $event" @playerSpecial="monsterHealth -= $event"></app-commands>
+          <app-commands @pReset="playerHealth = $event" @mReset="monsterHealth = $event" :pHealth="playerHealth" :mHealth="monsterHealth"  @playerAttack="pAttack($event)" @playerHeal="playerHealth += $event" @playerSpecial="pSpecial($event)" @monsterAttack="playerHealth -= $event" @mSpecial="mSpecial($event)" @mHeal="monsterHealth += $event"></app-commands>
         </div>
       </div>
-
+ 
       <div class="row">
         <div class="col">
           <app-log></app-log>
@@ -30,7 +30,8 @@
 import Log from "./components/Log";
 import Player from "./components/Player";
 import Monster from "./components/Monster";
-import Commands from "./components/Commands"
+import Commands from "./components/Commands";
+import { eventBus } from "./main";
 
 
 export default {
@@ -49,8 +50,24 @@ export default {
      monsterAttack:Number,
       monsterHealth:100,
     }
+  },
+  methods:{
+    mSpecial(event){
+      this.monsterHealth -= event[1].target.value;
+      this.playerHealth -= event[0].target.value;
+    },
+    pSpecial(event){
+      console.log(event[0])
+      this.playerHealth -= event[1];
+      this.monsterHealth -= event[0];
+      
+    },
+    pAttack(event){
+      this.monsterHealth -= event;
+      this.gameLog.push(`Player Attack: ${toString(event)}`);
+      console.log(gameLog)
+    }
   }
- 
 }
 </script>
 
